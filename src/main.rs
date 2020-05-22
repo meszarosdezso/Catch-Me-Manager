@@ -1,7 +1,8 @@
 use anyhow::{Context, Result};
-use gtfs_structures::{Gtfs, Stop, Trip};
+use color_convert::color::Color;
+use gtfs_structures::{Gtfs, Route, RouteType, Stop, Trip};
+use rgb::RGB8;
 use serde::Serialize;
-use serde_json;
 use std::{
     collections::{HashMap, HashSet},
     fs::File,
@@ -13,6 +14,27 @@ use structopt::StructOpt;
 struct Opt {
     /// Path to zip archive or directory
     path: String,
+}
+
+#[derive(Debug, PartialEq, Serialize)]
+struct CatchMeRoute {
+    name: String,
+    id: String,
+    color: String,
+    vehicle: RouteType,
+    stops: Vec<String>,
+}
+
+impl From<Route> for CatchMeRoute {
+    fn from(route: Route) -> CatchMeRoute {
+        CatchMeRoute {
+            name: route.short_name,
+            id: route.id,
+            color: String::new(),
+            vehicle: route.route_type,
+            stops: Vec::new(),
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Serialize)]
@@ -33,20 +55,21 @@ impl From<Arc<Stop>> for CatchMeStop {
         }
     }
 }
+
 #[derive(Debug, PartialEq, Serialize)]
 struct CatchMeData {
-    routes: HashMap<String, Vec<String>>,
+    routes: HashMap<String, CatchMeRoute>,
     stops: HashMap<String, CatchMeStop>,
 }
 
 fn main() -> Result<()> {
     let opt = Opt::from_args();
 
-    let gtfs = Gtfs::from_path(opt.path).context("Failed to process given directory.")?;
+    let gtfs: Gtfs = Gtfs::from_path(opt.path).context("Failed to process given directory.")?;
 
     let stops_for_routes = get_stops_for_routes(&gtfs.trips);
 
-    let most_popular_trips = get_most_popular_trips(&stops_for_routes);
+    let most_popular_trips = get_most_popular_trips(&stops_for_routes, &gtfs.routes);
 
     let used_stops = get_used_stops(&most_popular_trips, &gtfs.stops);
 
@@ -62,33 +85,38 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_used_stops(
-    trips: &HashMap<String, Vec<String>>,
-    stops: &HashMap<String, Arc<Stop>>,
-) -> HashMap<String, CatchMeStop> {
-    let keys: HashSet<_> = trips.values().flatten().collect();
-    keys.iter()
-        .map(|key| ((*key).clone(), stops[*key].clone().into()))
-        .collect()
-}
-
 fn get_stops_for_routes(
     trips: &HashMap<String, Trip>,
 ) -> HashMap<String, HashMap<Vec<String>, i32>> {
     let mut stops_for_routes: HashMap<String, HashMap<Vec<String>, i32>> = HashMap::new();
+
     for trip in trips.values() {
         let stops_for_route = stops_for_routes.entry(trip.route_id.clone()).or_default();
+
         let trip_count = stops_for_route.entry(get_stops_for_trip(trip)).or_default();
         *trip_count += 1;
     }
-    return stops_for_routes;
+    stops_for_routes
 }
 
 fn get_most_popular_trips(
     sfr: &HashMap<String, HashMap<Vec<String>, i32>>,
-) -> HashMap<String, Vec<String>> {
+    routes: &HashMap<String, Route>,
+) -> HashMap<String, CatchMeRoute> {
     sfr.iter()
-        .map(|(key, value)| (key.clone(), most_popular_trip(value)))
+        .map(|(key, value)| {
+            let route = &routes[&key.clone()];
+
+            let catch_me_route = CatchMeRoute {
+                name: route.short_name.clone(),
+                id: route.id.clone(),
+                color: rgb_to_hex(route.route_color.unwrap()),
+                stops: most_popular_trip(value),
+                vehicle: route.route_type,
+            };
+
+            (key.clone(), catch_me_route)
+        })
         .collect()
 }
 
@@ -105,4 +133,21 @@ fn get_stops_for_trip(trip: &Trip) -> Vec<String> {
         .iter()
         .map(|st| st.stop.id.clone())
         .collect()
+}
+
+fn get_used_stops(
+    trips: &HashMap<String, CatchMeRoute>,
+    stops: &HashMap<String, Arc<Stop>>,
+) -> HashMap<String, CatchMeStop> {
+    let keys: HashSet<_> = trips.iter().map(|(_, r)| &r.stops).flatten().collect();
+    keys.iter()
+        .map(|key| ((*key).clone(), stops[*key].clone().into()))
+        .collect()
+}
+
+fn rgb_to_hex(input: RGB8) -> String {
+    let input_string = &input.to_string();
+    let c = Color::new(input_string);
+
+    c.to_hex().unwrap()
 }
