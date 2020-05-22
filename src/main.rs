@@ -78,7 +78,7 @@ fn main() -> Result<()> {
         stops: used_stops,
     };
 
-    let file: File = File::create("export.json").context("Failed to create file.")?;
+    let file: File = File::create("ui/src/data/export.json").context("Failed to create file.")?;
 
     serde_json::to_writer_pretty(file, &data).context("Failed to export data")?;
 
@@ -110,7 +110,7 @@ fn get_most_popular_trips(
             let catch_me_route = CatchMeRoute {
                 name: route.short_name.clone(),
                 id: route.id.clone(),
-                color: rgb_to_hex(route.route_color.unwrap()),
+                color: rgb_to_hex(route.route_color),
                 stops: most_popular_trip(value),
                 vehicle: route.route_type,
             };
@@ -145,8 +145,8 @@ fn get_used_stops(
         .collect()
 }
 
-fn rgb_to_hex(input: RGB8) -> String {
-    let input_string = &input.to_string();
+fn rgb_to_hex(input: Option<RGB8>) -> String {
+    let input_string = &input.unwrap_or(RGB8::new(0, 0, 0)).to_string();
     let c = Color::new(input_string);
 
     c.to_hex().unwrap()
