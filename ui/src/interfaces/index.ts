@@ -10,9 +10,13 @@ export type Route = {
   name: string
   color: string
   type: RouteType
+  text_color: string
   stops: Stop[]
 }
 
 enum RouteType {}
 
-export type CatchMeData = { [key: string]: Route }
+export type CatchMeData = {
+  stops: Stop[]
+  routes: { [key: string]: Route }
+}

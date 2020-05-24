@@ -1,0 +1,27 @@
+.GtfsInfo {
+  align-self: center;
+  margin: 2rem 0;
+
+  h1 {
+    color: #333;
+    padding-left: 3rem;
+    font-size: 3rem;
+    line-height: 1.1;
+    font-weight: 500;
+    position: relative;
+
+    .route-num,
+    .stop-num {
+      transition: opacity 500ms ease-out;
+      .amount {
+        font-size: 8rem;
+        font-weight: 800;
+      }
+    }
+
+    .stop-num {
+      position: absolute;
+      transform: translateY(-100%);
+    }
+  }
+}

@@ -1,0 +1,22 @@
+#Footer {
+  text-align: right;
+  font-size: 0.7rem;
+  color: #888;
+  padding: 2rem;
+  cursor: default;
+  font-weight: 300;
+
+  #antal,
+  #dezso {
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.8rem;
+    &:hover {
+      color: rgb(240, 0, 152);
+    }
+  }
+
+  #heart {
+    color: rgb(255, 0, 60);
+  }
+}

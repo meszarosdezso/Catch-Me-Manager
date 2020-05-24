@@ -1,0 +1,28 @@
+.NoData {
+  text-align: center;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  height: 100%;
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .get-started {
+    margin: 3rem auto;
+    font-weight: 320;
+    line-height: 200%;
+
+    code {
+      padding: 0.5rem;
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+      background: #ececec;
+      border-radius: 0.3rem;
+    }
+    button {
+      margin-left: 0.3rem;
+    }
+  }
+}

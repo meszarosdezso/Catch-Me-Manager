@@ -1,35 +1,48 @@
 import React, { useEffect, useState, useContext } from "react"
-import { CatchMeData, Route } from "../interfaces"
+import { CatchMeData } from "../interfaces"
 import { createContext } from "react"
-import jsonData from "../data/export.json"
 import { parseData } from "../utils/catchme"
+import NoData from "../components/NoData/NoData"
 
-export interface Props {
-  data: CatchMeData
-  getRoute(id: string): Route
+interface Props extends CatchMeData {
+  uploadData(data: any): void
 }
 
 const CatchMeContext = createContext<Props>({} as Props)
 
 const CatchMeProvider: React.FC = ({ children }) => {
-  const [{ data, loading }, setState] = useState<{
+  const [{ data, loading, noData }, setState] = useState<{
+    noData: boolean
     data: CatchMeData
     loading: boolean
-  }>({ data: {}, loading: true })
+  }>({ data: {} as CatchMeData, loading: true, noData: false })
 
   useEffect(() => {
-    setState({ data: parseData(jsonData), loading: false })
+    fetchData().then((data) => {
+      setState({
+        data: parseData(data),
+        loading: false,
+        noData: data === null,
+      })
+    })
   }, [])
 
-  const getRoute = (routeId: string): Route => {
-    return data[routeId]
+  const fetchData = async () => {
+    try {
+      const file = await fetch("./exprt.json") //! Typo for testing
+      return await file.json()
+    } catch {
+      return null
+    }
   }
 
-  return loading ? (
-    <h1>Loading data...</h1>
-  ) : (
-    <CatchMeContext.Provider value={{ data, getRoute } as Props}>
-      {children}
+  const uploadData = (data: any) => {
+    setState({ data: parseData(data), loading: false, noData: false })
+  }
+
+  return (
+    <CatchMeContext.Provider value={{ uploadData, ...data }}>
+      {loading ? <h1>Loading data...</h1> : noData ? <NoData /> : children}
     </CatchMeContext.Provider>
   )
 }
