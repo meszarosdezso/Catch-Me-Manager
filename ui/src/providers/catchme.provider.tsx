@@ -29,7 +29,7 @@ const CatchMeProvider: React.FC = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      const file = await fetch("./exprt.json") //! Typo for testing
+      const file = await fetch("./export.json") //! Typo for testing
       return await file.json()
     } catch {
       return null

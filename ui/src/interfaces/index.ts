@@ -12,11 +12,28 @@ export type Route = {
   type: RouteType
   text_color: string
   stops: Stop[]
+  shape_id: string
 }
 
-enum RouteType {}
+export type Shape = {
+  lat: number
+  lng: number
+  sequence: number
+}
+
+enum RouteType {
+  Tramway,
+  Subway,
+  Rail,
+  Bus,
+  Ferry,
+  CableCar,
+  Gondola,
+  Funicular,
+}
 
 export type CatchMeData = {
   stops: Stop[]
   routes: { [key: string]: Route }
+  shapes: { [key: string]: Shape[] }
 }

@@ -9,7 +9,7 @@ const Map: React.FC = () => {
       "pk.eyJ1IjoibWVzemFyb3NkZXpzbyIsImEiOiJjanA4MGk5djQwNzlyM3BvODEwYmxkMHBnIn0.Uv1FVlioisSft1sm3-GCRQ",
   })
 
-  const { stops } = useCatchMe()
+  const { stops, shapes, routes } = useCatchMe()
 
   const { avgLat, avgLng } = useMemo(() => {
     const lats = stops.map((s) => s.lat)
@@ -20,6 +20,17 @@ const Map: React.FC = () => {
 
     return { avgLat, avgLng }
   }, [stops])
+
+  const groupRoutesByColors = useMemo(() => {
+    const colors: any = {}
+
+    for (const key in routes) {
+      if (routes[key].color !== "#1e1e1e")
+        colors[routes[key].color] = [...(colors[routes[key].color] || []), key]
+    }
+
+    return colors
+  }, [])
 
   return (
     <div className="Map-container">
@@ -34,11 +45,30 @@ const Map: React.FC = () => {
         }}
         style={"mapbox://styles/mapbox/light-v9" as string}
       >
-        <Layer type="symbol" id="marker" layout={{ "icon-image": "marker-15" }}>
-          {stops.map((s) => (
-            <Feature key={s.id} coordinates={[s.lng, s.lat]} />
-          ))}
-        </Layer>
+        {Object.keys(groupRoutesByColors).map((color) => (
+          <Layer
+            key={color}
+            type="line"
+            layout={{
+              "line-cap": "round",
+              "line-join": "round",
+            }}
+            paint={{
+              "line-width": 2,
+              "line-color": color,
+            }}
+          >
+            {groupRoutesByColors[color].map((routeId: string) => (
+              <Feature
+                key={routeId}
+                coordinates={shapes[routes[routeId].shape_id].map((point) => [
+                  point.lng,
+                  point.lat,
+                ])}
+              />
+            ))}
+          </Layer>
+        ))}
       </MapBox>
     </div>
   )
