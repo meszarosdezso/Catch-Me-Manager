@@ -9,7 +9,6 @@ const GtfsInfo: React.FC = () => {
   const [state, setState] = useState(0)
 
   useEffect(() => {
-    console.log(routesByColors)
     const interval = setInterval(() => {
       setState((s) => (s + 1) % 3)
     }, 3000)
@@ -38,8 +37,8 @@ const GtfsInfo: React.FC = () => {
         </div>
       </h1>
 
-      <Link id="start" to="/manage">
-        Let's start
+      <Link id="start" to="/create">
+        Create new map
       </Link>
     </div>
   )

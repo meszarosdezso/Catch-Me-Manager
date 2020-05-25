@@ -1,16 +1,20 @@
 import React, { useRef } from "react"
 import "./UploadData.scss"
 import { useCatchMe } from "../../providers/catchme.provider"
+import { useHistory } from "react-router-dom"
 
 const UploadPage: React.FC = () => {
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
 
   const { uploadData } = useCatchMe()
 
+  const history = useHistory()
+
   const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0]
     const jsonData = await parseJsonFile(file)
     uploadData(jsonData)
+    history.push("/")
   }
 
   const parseJsonFile = (file: File) =>
