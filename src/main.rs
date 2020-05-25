@@ -69,6 +69,8 @@ struct CatchMeData {
     shapes: HashMap<String, Vec<CatchMeShape>>,
 }
 
+type CatchMeTrip = HashMap<(Vec<String>, Option<String>), i32>;
+
 fn main() -> Result<()> {
     let opt = Opt::from_args();
 
@@ -95,11 +97,8 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_stops_for_routes(
-    trips: &HashMap<String, Trip>,
-) -> HashMap<String, HashMap<(Vec<String>, Option<String>), i32>> {
-    let mut stops_for_routes: HashMap<String, HashMap<(Vec<String>, Option<String>), i32>> =
-        HashMap::new();
+fn get_stops_for_routes(trips: &HashMap<String, Trip>) -> HashMap<String, CatchMeTrip> {
+    let mut stops_for_routes: HashMap<String, CatchMeTrip> = HashMap::new();
 
     // {
     //     "routeId": {
@@ -119,7 +118,7 @@ fn get_stops_for_routes(
 }
 
 fn get_most_popular_trips(
-    stops_for_routes: &HashMap<String, HashMap<(Vec<String>, Option<String>), i32>>,
+    stops_for_routes: &HashMap<String, CatchMeTrip>,
     routes: &HashMap<String, Route>,
 ) -> HashMap<String, CatchMeRoute> {
     stops_for_routes
@@ -144,9 +143,7 @@ fn get_most_popular_trips(
         .collect()
 }
 
-fn most_popular_trip(
-    list: &HashMap<(Vec<String>, Option<String>), i32>,
-) -> (Vec<String>, Option<String>) {
+fn most_popular_trip(list: &CatchMeTrip) -> (Vec<String>, Option<String>) {
     list.iter()
         .max_by(|(_, c1), (_, c2)| c1.cmp(c2))
         .unwrap()
@@ -161,7 +158,7 @@ fn get_trip_data(trip: &Trip) -> (Vec<String>, Option<String>) {
         .map(|st| st.stop.id.clone())
         .collect();
 
-    return (stops, trip.shape_id.clone());
+    (stops, trip.shape_id.clone())
 }
 
 fn get_used_stops(
