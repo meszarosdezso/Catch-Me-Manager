@@ -1,6 +1,6 @@
 .AppRoot {
   display: grid;
-  grid-template-rows: 4rem auto 4rem;
+  grid-template-rows: 4rem auto 3rem;
   min-height: 100vh;
 
   #AppHeader {
@@ -15,12 +15,23 @@
 
       img {
         width: 100%;
-        transition: filter 200ms ease-out;
+        transition: opacity 200ms ease-out;
+      }
+
+      #logo_colored {
+        top: -0.2rem;
+        left: 0.2rem;
+        position: absolute;
+        opacity: 0;
       }
 
       &:hover {
-        img {
-          filter: invert(1);
+        #logo {
+          opacity: 0;
+        }
+
+        #logo_colored {
+          opacity: 1;
         }
       }
     }
@@ -30,14 +41,29 @@
       font-size: 1.7rem;
       line-height: 90%;
 
-      #manager {
+      #creator {
         font-weight: 500;
       }
     }
   }
 
-  h3 {
+  #upload-link {
     margin-left: auto;
+    margin-right: 2vw;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 0.3rem;
+    text-align: center;
+    border: 1px solid #000;
+    font-weight: 500;
+
+    &:hover {
+      background: #000;
+      color: #fff;
+    }
+  }
+
+  h3 {
     opacity: 0.5;
     font-weight: 500;
   }
@@ -45,9 +71,10 @@
 
 .Home {
   display: grid;
-  grid-template-columns: 40% 45%;
+  grid-template-columns: 40% 50%;
   justify-content: space-around;
   align-items: center;
+  position: relative;
 
   @media screen and (max-width: 700px) {
     grid-template-columns: 1fr;

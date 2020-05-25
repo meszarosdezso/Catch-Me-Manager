@@ -16,8 +16,7 @@ export type Route = {
 }
 
 export type Shape = {
-  lat: number
-  lng: number
+  coordinate: LatLng
   sequence: number
 }
 
@@ -32,8 +31,10 @@ enum RouteType {
   Funicular,
 }
 
+export type LatLng = { longitude: number; latitude: number }
+
 export type CatchMeData = {
-  stops: Stop[]
+  stops: { [stopId: string]: Stop }
   routes: { [key: string]: Route }
   shapes: { [key: string]: Shape[] }
 }

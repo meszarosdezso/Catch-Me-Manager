@@ -1,6 +1,6 @@
 [package]
-name = "catchme-manager"
-version = "0.1.0"
+name = "catchme-creator"
+version = "0.2.0"
 authors = ["meszarosdezso <meszarosdezsodev@gmail.com>"]
 edition = "2018"
 

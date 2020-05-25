@@ -138,8 +138,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "catchme-manager"
-version = "0.1.0"
+name = "catchme-creator"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "gtfs-structures",

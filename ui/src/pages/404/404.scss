@@ -1,0 +1,19 @@
+.Error404 {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    font-weight: 300;
+    font-size: 3rem;
+
+    #code {
+      font-weight: 800;
+      margin-right: 0.8rem;
+    }
+  }
+}

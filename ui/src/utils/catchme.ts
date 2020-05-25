@@ -1,13 +1,17 @@
-import { Stop, CatchMeData, Shape } from "../interfaces"
+import { Stop, CatchMeData } from "../interfaces"
 
 export function parseData(data: {
   routes: { [key: string]: any }
   stops: { [key: string]: Stop }
-  shapes: { [key: string]: Shape[] }
+  shapes: { [key: string]: any[] }
 }): CatchMeData {
   if (!data) return {} as CatchMeData
 
-  const ret: CatchMeData = { routes: {}, stops: [], shapes: {} } as CatchMeData
+  const ret: CatchMeData = {
+    routes: {},
+    stops: data.stops,
+    shapes: {},
+  } as CatchMeData
 
   for (const key in data.routes) {
     const rawRoute = data.routes[key]
@@ -17,9 +21,15 @@ export function parseData(data: {
     }
   }
 
-  ret.shapes = data.shapes
-
-  ret.stops = Object.values(data.stops)
+  for (const shapeId in data.shapes) {
+    ret.shapes[shapeId] = data.shapes[shapeId].map((s) => ({
+      sequence: s.sequence,
+      coordinate: {
+        latitude: s.lat,
+        longitude: s.lng,
+      },
+    }))
+  }
 
   return ret
 }

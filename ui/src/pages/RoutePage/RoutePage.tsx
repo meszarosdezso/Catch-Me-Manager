@@ -1,6 +1,7 @@
 import React from "react"
 import { useRouteMatch } from "react-router-dom"
 import { useCatchMe } from "../../providers/catchme.provider"
+import Error404 from "../404/404"
 
 const RoutePage: React.FC = () => {
   const match = useRouteMatch<{ routeId: string }>()
@@ -9,7 +10,7 @@ const RoutePage: React.FC = () => {
 
   const route = routes[match.params.routeId]
 
-  return (
+  return route ? (
     <div className="RoutePage">
       <h1>{route.name}</h1>
 
@@ -19,6 +20,8 @@ const RoutePage: React.FC = () => {
         ))}
       </ul>
     </div>
+  ) : (
+    <Error404 />
   )
 }
 

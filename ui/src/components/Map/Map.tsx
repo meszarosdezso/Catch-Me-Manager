@@ -9,28 +9,17 @@ const Map: React.FC = () => {
       "pk.eyJ1IjoibWVzemFyb3NkZXpzbyIsImEiOiJjanA4MGk5djQwNzlyM3BvODEwYmxkMHBnIn0.Uv1FVlioisSft1sm3-GCRQ",
   })
 
-  const { stops, shapes, routes } = useCatchMe()
+  const { stops, shapes, routes, routesByColors } = useCatchMe()
 
   const { avgLat, avgLng } = useMemo(() => {
-    const lats = stops.map((s) => s.lat)
-    const lngs = stops.map((s) => s.lng)
+    const lats = Object.values(stops).map((s) => s.lat)
+    const lngs = Object.values(stops).map((s) => s.lng)
 
     const avgLat = lats.reduce((a, b) => a + b) / lats.length
     const avgLng = lngs.reduce((a, b) => a + b) / lngs.length
 
     return { avgLat, avgLng }
   }, [stops])
-
-  const groupRoutesByColors = useMemo(() => {
-    const colors: any = {}
-
-    for (const key in routes) {
-      if (routes[key].color !== "#1e1e1e")
-        colors[routes[key].color] = [...(colors[routes[key].color] || []), key]
-    }
-
-    return colors
-  }, [])
 
   return (
     <div className="Map-container">
@@ -45,7 +34,7 @@ const Map: React.FC = () => {
         }}
         style={"mapbox://styles/mapbox/light-v9" as string}
       >
-        {Object.keys(groupRoutesByColors).map((color) => (
+        {Object.keys(routesByColors).map((color) => (
           <Layer
             key={color}
             type="line"
@@ -58,12 +47,14 @@ const Map: React.FC = () => {
               "line-color": color,
             }}
           >
-            {groupRoutesByColors[color].map((routeId: string) => (
+            {routesByColors[color].map((routeId: string) => (
               <Feature
                 key={routeId}
-                coordinates={shapes[routes[routeId].shape_id].map((point) => [
-                  point.lng,
-                  point.lat,
+                coordinates={shapes[
+                  routes[routeId].shape_id
+                ].map(({ coordinate: { latitude, longitude } }) => [
+                  longitude,
+                  latitude,
                 ])}
               />
             ))}

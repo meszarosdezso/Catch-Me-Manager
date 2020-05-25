@@ -1,8 +1,8 @@
 import React, { useRef } from "react"
-import "./NoData.scss"
+import "./UploadData.scss"
 import { useCatchMe } from "../../providers/catchme.provider"
 
-const NoData: React.FC = () => {
+const UploadPage: React.FC = () => {
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
 
   const { uploadData } = useCatchMe()
@@ -24,7 +24,7 @@ const NoData: React.FC = () => {
     })
 
   return (
-    <div className="NoData">
+    <div className="UploadPage">
       <h1>
         Upload some data{" "}
         <span aria-label="Down finger" role="img">
@@ -32,7 +32,7 @@ const NoData: React.FC = () => {
         </span>
       </h1>
       <p className="get-started">
-        To get started run <code>catchme-manager /path/to/gtfs/directory</code>
+        To get started run <code>catchme-creator /path/to/gtfs/directory</code>
         or{" "}
         <button onClick={(_) => inputRef.current.click()} className="full">
           Upload JSON
@@ -43,4 +43,4 @@ const NoData: React.FC = () => {
   )
 }
 
-export default NoData
+export default UploadPage
