@@ -1,0 +1,28 @@
+.ChangelogPage {
+  padding: 2rem;
+  max-width: 600px;
+  margin: auto;
+
+  h1 {
+    font-size: 3rem;
+    text-align: center;
+  }
+
+  #version {
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .commit {
+    margin-bottom: 1.4rem;
+    .message {
+      font-size: 1.7rem;
+      line-height: 1;
+    }
+
+    .date {
+      opacity: 0.5;
+      font-weight: 500;
+    }
+  }
+}

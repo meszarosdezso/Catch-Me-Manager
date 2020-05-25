@@ -4,6 +4,7 @@ import { createContext } from "react"
 import { parseData } from "../utils/catchme"
 import UploadData from "../pages/UploadData/UploadData"
 import Header from "../components/Header/Header"
+import LoadingPage from "../pages/Loading/Loading"
 
 interface Props extends CatchMeData {
   uploadData(data: any): void
@@ -61,7 +62,7 @@ const CatchMeProvider: React.FC = ({ children }) => {
       value={{ uploadData, ...data, routesByColors: groupRoutesByColors() }}
     >
       {loading ? (
-        <h1>Loading data...</h1>
+        <LoadingPage />
       ) : noData ? (
         <>
           <Header showUpload={false} />

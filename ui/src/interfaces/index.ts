@@ -38,3 +38,9 @@ export type CatchMeData = {
   routes: { [key: string]: Route }
   shapes: { [key: string]: Shape[] }
 }
+
+export type Commit = {
+  author: string
+  date: Date
+  message: string
+}

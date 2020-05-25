@@ -3,8 +3,11 @@ import "./Header.scss"
 import { Link } from "react-router-dom"
 import logo from "../../assets/logo120.png"
 import logo_colored from "../../assets/logo_colored120.png"
+import { useChangelog } from "../../providers/changelog.provider"
 
 const Header: React.FC<{ showUpload?: boolean }> = ({ showUpload = true }) => {
+  const { version } = useChangelog()
+
   return (
     <header id="Header">
       <Link style={{ display: "flex", alignItems: "center" }} to="/">
@@ -24,12 +27,14 @@ const Header: React.FC<{ showUpload?: boolean }> = ({ showUpload = true }) => {
         </Link>
       ) : null}
 
-      <h3
-        style={{ marginLeft: showUpload ? "unset" : "auto" }}
-        id="app-version"
-      >
-        0.2.0
-      </h3>
+      <Link to="/changelog">
+        <h3
+          style={{ marginLeft: showUpload ? "unset" : "auto" }}
+          id="app-version"
+        >
+          {version}
+        </h3>
+      </Link>
     </header>
   )
 }
