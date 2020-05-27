@@ -2,6 +2,7 @@ import React, { useRef } from "react"
 import "./UploadData.scss"
 import { useCatchMe } from "../../providers/catchme.provider"
 import { useHistory } from "react-router-dom"
+import Layout from "../../components/Layout/Layout"
 
 const UploadPage: React.FC = () => {
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
@@ -28,22 +29,25 @@ const UploadPage: React.FC = () => {
     })
 
   return (
-    <div className="UploadPage">
-      <h1>
-        Upload some data{" "}
-        <span aria-label="Down finger" role="img">
-          👇
-        </span>
-      </h1>
-      <p className="get-started">
-        To get started run <code>catchme-creator /path/to/gtfs/directory</code>
-        or{" "}
-        <button onClick={(_) => inputRef.current.click()} className="full">
-          Upload JSON
-        </button>
-        <input type="file" hidden ref={inputRef} onChange={uploadFile} />
-      </p>
-    </div>
+    <Layout showUpload={false}>
+      <div className="UploadPage">
+        <h1>
+          Upload some data{" "}
+          <span aria-label="Down finger" role="img">
+            👇
+          </span>
+        </h1>
+        <p className="get-started">
+          To get started run{" "}
+          <code>catchme-creator /path/to/gtfs/directory</code>
+          or{" "}
+          <button onClick={(_) => inputRef.current.click()} className="full">
+            Upload JSON
+          </button>
+          <input type="file" hidden ref={inputRef} onChange={uploadFile} />
+        </p>
+      </div>
+    </Layout>
   )
 }
 

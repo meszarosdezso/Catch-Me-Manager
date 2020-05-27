@@ -44,3 +44,5 @@ export type Commit = {
   date: Date
   message: string
 }
+
+export type RoutesByColors = { [color: string]: string[] }

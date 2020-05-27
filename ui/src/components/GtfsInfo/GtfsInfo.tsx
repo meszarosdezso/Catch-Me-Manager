@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react"
 import { useCatchMe } from "../../providers/catchme.provider"
 import "./GtfsInfo.scss"
 import { Link } from "react-router-dom"
+import { groupRoutesByColors } from "../../utils/catchme"
 
 const GtfsInfo: React.FC = () => {
-  const { routes, stops, routesByColors } = useCatchMe()
+  const { routes, stops } = useCatchMe()
+
+  const routesByColors = groupRoutesByColors(routes)
 
   const [state, setState] = useState(0)
 

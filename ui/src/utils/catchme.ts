@@ -1,4 +1,4 @@
-import { Stop, CatchMeData } from "../interfaces"
+import { Stop, CatchMeData, Route, RoutesByColors } from "../interfaces"
 
 export function parseData(data: {
   routes: { [key: string]: any }
@@ -32,4 +32,20 @@ export function parseData(data: {
   }
 
   return ret
+}
+
+export const groupRoutesByColors = (routes: {
+  [id: string]: Route
+}): RoutesByColors => {
+  const colors: any = {}
+
+  for (const routeId in routes) {
+    if (routes[routeId].color !== "#1e1e1e")
+      colors[routes[routeId].color] = [
+        ...(colors[routes[routeId].color] || []),
+        routeId,
+      ]
+  }
+
+  return colors
 }

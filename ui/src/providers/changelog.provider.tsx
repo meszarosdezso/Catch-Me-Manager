@@ -32,7 +32,11 @@ const ChangelogProvider: React.FC = ({ children }) => {
     <LoadingPage />
   ) : (
     <ChangelogContext.Provider
-      value={{ commits: parseCommits(commits), version }}
+      value={{
+        commits:
+          process.env.NODE_ENV === "production" ? parseCommits(commits) : [],
+        version,
+      }}
     >
       {children}
     </ChangelogContext.Provider>
