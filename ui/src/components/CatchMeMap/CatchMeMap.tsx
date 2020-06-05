@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import "./CatchMeMap.scss"
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl"
+import ReactMapboxGl, { Layer, Feature, Marker } from "react-mapbox-gl"
 import { useCatchMe } from "../../providers/catchme.provider"
 import { VisibleRoutesConsumer } from "../../providers/visibleRoutes.provider"
 
@@ -9,7 +9,7 @@ type Props = {
   id?: string
 }
 
-const CatchMeMap: React.FC<Props> = ({ style, id, children }) => {
+const CatchMeMap: React.FC<Props> = ({ style, id }) => {
   const MapBox = ReactMapboxGl({
     accessToken:
       "pk.eyJ1IjoibWVzemFyb3NkZXpzbyIsImEiOiJjanA4MGk5djQwNzlyM3BvODEwYmxkMHBnIn0.Uv1FVlioisSft1sm3-GCRQ",
@@ -41,38 +41,70 @@ const CatchMeMap: React.FC<Props> = ({ style, id, children }) => {
         style={"mapbox://styles/mapbox/light-v9" as string}
       >
         <VisibleRoutesConsumer>
-          {([visibleRoutes]) =>
-            Object.keys(visibleRoutes).map((color) => (
-              <Layer
-                key={color}
-                type="line"
-                layout={{
-                  "line-cap": "round",
-                  "line-join": "round",
-                }}
-                paint={{
-                  "line-width": 2,
-                  "line-color": color,
-                }}
-              >
-                {visibleRoutes[color].map((routeId) => {
-                  const shape = shapes[routes[routeId].shape_id]
+          {({ visibleRoutes, selectedRoute, selectedStop }) => {
+            return (
+              <div className="MapLayers">
+                {Object.keys(visibleRoutes).map((color) => (
+                  <Layer
+                    key={color}
+                    type="line"
+                    layout={{
+                      "line-cap": "round",
+                      "line-join": "round",
+                    }}
+                    paint={{
+                      "line-width": 2,
+                      "line-color": color,
+                    }}
+                  >
+                    {selectedRoute.stops.map((s) => (
+                      <Marker key={s.id} coordinates={[s.lng, s.lat]}>
+                        <div
+                          style={{
+                            width: "2rem",
+                            height: "2rem",
+                            backgroundColor: "red",
+                            borderRadius: "50%",
+                          }}
+                        ></div>
+                      </Marker>
+                    ))}
 
-                  return (
+                    {visibleRoutes[color].map((routeId) => {
+                      const shape = shapes[routes[routeId].shape_id]
+
+                      return (
+                        <Feature
+                          key={routeId}
+                          coordinates={shape.map(
+                            ({ coordinate: { latitude, longitude } }) => [
+                              longitude,
+                              latitude,
+                            ]
+                          )}
+                        />
+                      )
+                    })}
+                  </Layer>
+                ))}
+
+                {selectedStop && (
+                  <Layer
+                    type="symbol"
+                    layout={{
+                      "icon-image": "marker-15",
+                      "icon-anchor": "bottom",
+                    }}
+                  >
                     <Feature
-                      key={routeId}
-                      coordinates={shape.map(
-                        ({ coordinate: { latitude, longitude } }) => [
-                          longitude,
-                          latitude,
-                        ]
-                      )}
+                      key={selectedStop.id}
+                      coordinates={[selectedStop.lng, selectedStop.lat]}
                     />
-                  )
-                })}
-              </Layer>
-            ))
-          }
+                  </Layer>
+                )}
+              </div>
+            )
+          }}
         </VisibleRoutesConsumer>
       </MapBox>
     </div>

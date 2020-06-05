@@ -6,7 +6,7 @@ import CatchMeMap from "../../components/CatchMeMap/CatchMeMap"
 import VisibleRoutesProvider, {
   VisibleRoutesConsumer,
 } from "../../providers/visibleRoutes.provider"
-import { Route, RoutesByColors } from "../../interfaces"
+import { Route, RoutesByColors, Stop } from "../../interfaces"
 
 const CreatePage: React.FC = () => {
   const { routes } = useCatchMe()
@@ -30,7 +30,7 @@ const CreatePage: React.FC = () => {
       <div className="CreatePage">
         <VisibleRoutesProvider initialRoutes={{}}>
           <VisibleRoutesConsumer>
-            {([visible, setVisible, _, setSelectedRoute]) => {
+            {({ visibleRoutes, setVisibleRoutes, setSelectedRoute }) => {
               return (
                 <div id="RouteList">
                   {Object.values(routes).map((route) => (
@@ -38,13 +38,15 @@ const CreatePage: React.FC = () => {
                       key={route.id}
                       onClick={(_) => {
                         setSelectedRoute(route)
-                        setVisible((prevState) => toggleRoute(prevState, route))
+                        setVisibleRoutes((prevState) =>
+                          toggleRoute(prevState, route)
+                        )
                       }}
                       className="RouteListItem"
                       style={{
                         background: route.color,
                         color: route.text_color,
-                        opacity: visible[route.color]?.includes(route.id)
+                        opacity: visibleRoutes[route.color]?.includes(route.id)
                           ? 1
                           : 0.5,
                       }}
@@ -60,11 +62,34 @@ const CreatePage: React.FC = () => {
           <CatchMeMap id="CreateMap" />
 
           <VisibleRoutesConsumer>
-            {([_, __, route]) => (
-              <div id="SelectedRoute">
-                <h2 className="title">{route.name}</h2>
-              </div>
-            )}
+            {({ selectedRoute: route, setSelectedStop: setStop }) => {
+              if (route.name)
+                return (
+                  <div id="SelectedRoute">
+                    <h2 className="title">
+                      {route.name} (
+                      {route.stops && Object.values(route.stops)[0].name} -{" "}
+                      {route.stops &&
+                        Object.values(route.stops).reverse()[0].name}
+                      )
+                    </h2>
+
+                    <div className="stop-list">
+                      <ul>
+                        {route.stops.map((s) => (
+                          <li
+                            onMouseEnter={(e) => setStop(s)}
+                            onMouseLeave={(e) => setStop({} as Stop)}
+                            key={s.id}
+                          >
+                            {s.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )
+            }}
           </VisibleRoutesConsumer>
         </VisibleRoutesProvider>
       </div>
