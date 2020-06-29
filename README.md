@@ -1,3 +1,7 @@
+![logo](https://github.com/meszarosdezso/Catch-Me-Creator/blob/master/ui/src/assets/logo120.png?raw=true)
+
+&nbsp;
+
 # Catch me Creator
 
 ### What is Catch me?
@@ -10,7 +14,6 @@ Catch me Creator is a light tool written in Rust to convert GTFS dataset into a 
 
 #### Download the game
 
-&nbsp;
 
 [Android](https://play.google.com/store/apps/details?id=hu.gedatech.catchme)
 
