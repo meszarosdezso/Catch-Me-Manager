@@ -1,74 +1,31 @@
-import React from "react"
-import Layout from "../../components/Layout/Layout"
-import { useCatchMe } from "../../providers/catchme.provider"
-import "./Create.scss"
-import CatchMeMap from "../../components/CatchMeMap/CatchMeMap"
+import React from 'react'
+import Layout from '../../components/Layout/Layout'
+import './Create.scss'
+import CatchMeMap from '../../components/CatchMeMap/CatchMeMap'
 import VisibleRoutesProvider, {
   VisibleRoutesConsumer,
-} from "../../providers/visibleRoutes.provider"
-import { Route, RoutesByColors, Stop } from "../../interfaces"
+} from '../../providers/visibleRoutes.provider'
+import { Stop } from '../../interfaces'
+import RouteSelector from '../../components/RouteSelector/RouteSelector'
 
 const CreatePage: React.FC = () => {
-  const { routes } = useCatchMe()
-
-  const toggleRoute = (prev: RoutesByColors, route: Route): RoutesByColors => {
-    const sameColoredRoutes = prev[route.color] || []
-    if (sameColoredRoutes.includes(route.id)) {
-      return {
-        ...prev,
-        [route.color]: [...sameColoredRoutes.filter((id) => id !== route.id)],
-      }
-    } else
-      return {
-        ...prev,
-        [route.color]: [...sameColoredRoutes, route.id],
-      }
-  }
-
   return (
     <Layout showUpload={false} title="Create">
       <div className="CreatePage">
         <VisibleRoutesProvider initialRoutes={{}}>
-          <VisibleRoutesConsumer>
-            {({ visibleRoutes, setVisibleRoutes, setSelectedRoute }) => {
-              return (
-                <div id="RouteList">
-                  {Object.values(routes).map((route) => (
-                    <div
-                      key={route.id}
-                      onClick={(_) => {
-                        setSelectedRoute(route)
-                        setVisibleRoutes((prevState) =>
-                          toggleRoute(prevState, route)
-                        )
-                      }}
-                      className="RouteListItem"
-                      style={{
-                        background: route.color,
-                        color: route.text_color,
-                        opacity: visibleRoutes[route.color]?.includes(route.id)
-                          ? 1
-                          : 0.5,
-                      }}
-                    >
-                      <p>{route.name}</p>
-                    </div>
-                  ))}
-                </div>
-              )
-            }}
-          </VisibleRoutesConsumer>
+          <RouteSelector />
 
           <CatchMeMap id="CreateMap" />
 
           <VisibleRoutesConsumer>
             {({ selectedRoute: route, setSelectedStop: setStop }) => {
+              if (!route.name) return <h4>Select a route to start!</h4>
               if (route.name)
                 return (
                   <div id="SelectedRoute">
                     <h2 className="title">
                       {route.name} (
-                      {route.stops && Object.values(route.stops)[0].name} -{" "}
+                      {route.stops && Object.values(route.stops)[0].name} -{' '}
                       {route.stops &&
                         Object.values(route.stops).reverse()[0].name}
                       )
@@ -76,16 +33,38 @@ const CreatePage: React.FC = () => {
 
                     <div className="stop-list">
                       <ul>
-                        {route.stops.map((s) => (
+                        {route.stops.map(s => (
                           <li
-                            onMouseEnter={(e) => setStop(s)}
-                            onMouseLeave={(e) => setStop({} as Stop)}
+                            onMouseEnter={_ => setStop(s)}
+                            onMouseLeave={_ => setStop({} as Stop)}
                             key={s.id}
                           >
                             {s.name}
                           </li>
                         ))}
                       </ul>
+                    </div>
+                    <div className="buttons">
+                      <button
+                        style={{
+                          background: route.color,
+                          border: 'none',
+                          color: route.text_color,
+                        }}
+                        className="full"
+                      >
+                        Save {route.name}
+                      </button>
+                      <button
+                        style={{
+                          background: 'none',
+                          color: '#dd0000',
+                          marginLeft: '1rem',
+                          borderColor: '#dd0000',
+                        }}
+                      >
+                        Discard
+                      </button>
                     </div>
                   </div>
                 )

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useContext } from "react"
-import { CatchMeData } from "../interfaces"
-import { createContext } from "react"
-import { parseData } from "../utils/catchme"
-import UploadData from "../pages/UploadData/UploadData"
-import LoadingPage from "../pages/Loading/Loading"
+import React, { useEffect, useState, useContext } from 'react'
+import { CatchMeData } from '../interfaces'
+import { createContext } from 'react'
+import { parseData } from '../utils/catchme'
+import UploadData from '../pages/UploadData/UploadData'
+import LoadingPage from '../pages/Loading/Loading'
 
 interface Props extends CatchMeData {
   uploadData(data: any): void
@@ -19,7 +19,7 @@ const CatchMeProvider: React.FC = ({ children }) => {
   }>({ data: {} as CatchMeData, loading: true, noData: false })
 
   useEffect(() => {
-    fetchData().then((data) => {
+    fetchData().then(data => {
       setState({
         data: parseData(data),
         loading: false,
@@ -30,7 +30,7 @@ const CatchMeProvider: React.FC = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      const file = await fetch("./export.json") //! Typo for testing
+      const file = await fetch('./export.json') //! Typo for testing
       return await file.json()
     } catch {
       return null

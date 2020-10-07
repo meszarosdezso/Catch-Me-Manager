@@ -20,7 +20,7 @@ export type Shape = {
   sequence: number
 }
 
-enum RouteType {
+export enum RouteType {
   Tramway,
   Subway,
   Rail,
@@ -29,6 +29,7 @@ enum RouteType {
   CableCar,
   Gondola,
   Funicular,
+  Trolleybus,
 }
 
 export type LatLng = { longitude: number; latitude: number }

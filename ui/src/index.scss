@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Jost:wght@320;500;800&family=DM+Mono:wght@400&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@320;500;800&family=DM+Mono:wght@400&display=swap');
 
 $accent: #202fd4;
 $secondary: #ed9e17;
@@ -37,6 +37,7 @@ button {
   font-weight: 800;
   padding: 0.5rem 1rem;
   color: black;
+  cursor: pointer;
 
   &.full {
     background-color: black;

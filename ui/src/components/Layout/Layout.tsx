@@ -1,9 +1,9 @@
-import React, { useEffect } from "react"
-import { Link } from "react-router-dom"
-import logo from "../../assets/logo120.png"
-import logo_colored from "../../assets/logo_colored120.png"
-import { useChangelog } from "../../providers/changelog.provider"
-import "./Layout.scss"
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import logo from '../../assets/logo120.png'
+import logo_colored from '../../assets/logo_colored120.png'
+import { useChangelog } from '../../providers/changelog.provider'
+import './Layout.scss'
 
 type Props = {
   title?: string
@@ -18,7 +18,7 @@ const Layout: React.FC<Props> = ({
   showVersion = true,
 }) => {
   useEffect(() => {
-    document.title = title ? `${title} | Catch Me Creator` : "Catch Me Creator"
+    document.title = title ? `${title} | Catch Me Creator` : 'Catch Me Creator'
   }, [title])
 
   const { version } = useChangelog()
@@ -26,7 +26,7 @@ const Layout: React.FC<Props> = ({
   return (
     <div className="Layout">
       <header>
-        <Link style={{ display: "flex", alignItems: "center" }} to="/">
+        <Link style={{ display: 'flex', alignItems: 'center' }} to="/">
           <div className="logo">
             <img id="logo" src={logo} alt="Logo" />
             <img id="logo_colored" src={logo_colored} alt="Logo" />
@@ -50,7 +50,7 @@ const Layout: React.FC<Props> = ({
         {showVersion ? (
           <Link
             id="app-version"
-            style={{ marginLeft: showUpload ? "unset" : "auto" }}
+            style={{ marginLeft: showUpload ? 'unset' : 'auto' }}
             to="/changelog"
           >
             <h3>{version}</h3>
@@ -66,8 +66,8 @@ const Layout: React.FC<Props> = ({
           href="https://github.com/Sh4rK"
           id="antal"
         >
-          {" "}
-          Antal Szabo{" "}
+          {' '}
+          Antal Szabo{' '}
         </a>
         <span id="heart">❤</span>
         <a
@@ -76,7 +76,7 @@ const Layout: React.FC<Props> = ({
           href="https://github.com/meszarosdezso"
           id="dezso"
         >
-          {" "}
+          {' '}
           Dezso Meszaros
         </a>
       </footer>

@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react"
-import { createContext } from "react"
-import { RoutesByColors, Route, Stop } from "../interfaces"
+import React, { useState, useContext } from 'react'
+import { createContext } from 'react'
+import { RoutesByColors, Route, Stop } from '../interfaces'
 
 type Props = {
   visibleRoutes: RoutesByColors
@@ -20,9 +20,7 @@ const VisibleRoutesProvider: React.FC<{ initialRoutes: RoutesByColors }> = ({
   const [visibleRoutes, setVisibleRoutes] = useState<RoutesByColors>(
     initialRoutes
   )
-
   const [selectedStop, setSelectedStop] = useState<Stop>({} as Stop)
-
   const [selectedRoute, setSelectedRoute] = useState<Route>({} as Route)
 
   return (
