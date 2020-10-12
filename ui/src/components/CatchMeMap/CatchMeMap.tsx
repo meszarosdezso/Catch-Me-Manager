@@ -79,17 +79,14 @@ const CatchMeMap: React.FC<Props> = ({ style, id }) => {
                   selectedRoute.stops.map(s => (
                     <Marker key={s.id} coordinates={[s.lng, s.lat]}>
                       <div
-                        onMouseOver={_ => {
-                          console.log(s.name)
-                        }}
-                        onMouseLeave={_ => {
-                          console.log(s.name)
-                        }}
+                        className="stop-marker"
+                        data-stop-name={s.name}
                         style={{
                           width: '1rem',
                           height: '1rem',
-                          opacity: selectedStop.id === s.id ? 1 : 0.4,
-                          backgroundColor: selectedRoute.color,
+                          backgroundColor:
+                            selectedRoute.color +
+                            (selectedStop.id === s.id ? 'ff' : '55'),
                           borderRadius: '50%',
                           transform: `translate(0%, 50%)`,
                         }}

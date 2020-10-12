@@ -6,4 +6,25 @@
   .mapboxgl-control-container {
     display: none;
   }
+
+  .stop-marker {
+    &::after {
+      content: attr(data-stop-name);
+      white-space: nowrap;
+      background: white;
+      padding: 0.2rem 0.4rem;
+      border-radius: 0.3rem;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      top: -100%;
+      left: 50%;
+      display: none;
+    }
+
+    &:hover {
+      &::after {
+        display: unset;
+      }
+    }
+  }
 }

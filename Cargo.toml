@@ -4,7 +4,8 @@ version = "0.2.0"
 authors = ["meszarosdezso <meszarosdezsodev@gmail.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+crate-type = ["cdylib"]
 
 [dependencies]
 gtfs-structures = "0.20"
@@ -13,3 +14,8 @@ serde_json = "1"
 structopt = "0.3"
 anyhow = "1.0"
 rgb = "0.8"
+wasm-bindgen = "0.2"
+
+[dependencies.zip]
+default-features = false
+zip = "0.5.0"
