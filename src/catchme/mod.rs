@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::Result;
 use gtfs_structures::{Gtfs, Route, RouteType, Shape, Stop, Trip};
 use rgb::RGB8;
 use serde::Serialize;
@@ -61,11 +61,9 @@ pub struct CatchMeData {
     pub shapes: HashMap<String, Vec<CatchMeShape>>,
 }
 
-type CatchMeTrip = HashMap<(Vec<String>, Option<String>), i32>;
+pub type CatchMeTrip = HashMap<(Vec<String>, Option<String>), i32>;
 
-pub fn gtfs_to_catchme_data(path_to_gtfs: &str) -> Result<CatchMeData> {
-    let gtfs: Gtfs = Gtfs::new(path_to_gtfs).context("Its not a fucking directory wtf")?;
-
+pub fn gtfs_to_catchme_data(gtfs: &Gtfs) -> Result<CatchMeData> {
     let stops_for_routes = get_stops_for_routes(&gtfs.trips);
 
     let most_popular_trips = get_most_popular_trips(&stops_for_routes, &gtfs.routes);

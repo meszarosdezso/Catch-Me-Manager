@@ -1,9 +1,11 @@
 mod catchme;
 
 use anyhow::{Context, Result};
-use catchme::gtfs_to_catchme_data;
+use gtfs_structures::Gtfs;
 use std::fs::File;
 use structopt::StructOpt;
+
+use catchme::gtfs_to_catchme_data;
 
 #[derive(StructOpt, Debug)]
 struct Opt {
@@ -14,7 +16,9 @@ struct Opt {
 fn main() -> Result<()> {
     let opt = Opt::from_args();
 
-    let data = gtfs_to_catchme_data(&opt.path)?;
+    let gtfs = Gtfs::new(&opt.path).context("Failed to load GTFS data from the path.")?;
+
+    let data = gtfs_to_catchme_data(&gtfs)?;
 
     let file: File = File::create("ui/public/export.json").context("Failed to create file.")?;
 
