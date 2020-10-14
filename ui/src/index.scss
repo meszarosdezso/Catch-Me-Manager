@@ -11,6 +11,8 @@ $secondary: #ed9e17;
 body {
   font-family: Jost;
   font-weight: 500;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 h3,
@@ -48,6 +50,13 @@ button {
   &:active {
     opacity: 0.6;
   }
+}
+
+input {
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid black;
+  outline: none;
 }
 
 .button-group {

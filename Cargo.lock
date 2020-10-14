@@ -88,6 +88,7 @@ name = "catchme-creator"
 version = "0.2.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "console_error_panic_hook",
  "gtfs-structures",
  "rgb",

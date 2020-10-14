@@ -18,5 +18,5 @@ pub fn from_gtfs(uint8array: Vec<u8>) -> String {
 
     let data = gtfs_to_catchme_data(&gtfs).unwrap();
 
-    serde_json::to_string_pretty(&data).unwrap_or("Failed to process gtfs.".to_string())
+    serde_json::to_string(&data).unwrap_or("Failed to process gtfs.".to_string())
 }

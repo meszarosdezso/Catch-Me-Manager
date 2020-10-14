@@ -29,7 +29,7 @@ const ChangelogProvider: React.FC = ({ children }) => {
   }
 
   return loading ? (
-    <LoadingPage />
+    <LoadingPage text="Loading ..." />
   ) : (
     <ChangelogContext.Provider
       value={{

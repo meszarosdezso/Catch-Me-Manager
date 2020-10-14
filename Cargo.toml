@@ -8,7 +8,7 @@ edition = "2018"
 crate-type = ["cdylib"]
 
 [dependencies]
-gtfs-structures = { path = "../gtfs-structure", default-features = false  }
+gtfs-structures = { path = "../gtfs-structure", default-features = false }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 structopt = "0.3"
@@ -20,3 +20,7 @@ console_error_panic_hook = "0.1"
 [dependencies.zip]
 default-features = false
 zip = "0.5.0"
+
+[dependencies.chrono]
+version = "0.4"
+features = ["serde", "wasmbind"]

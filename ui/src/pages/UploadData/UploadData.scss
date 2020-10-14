@@ -4,6 +4,7 @@
   flex-flow: column wrap;
   justify-content: center;
   height: 100%;
+  padding: 2rem;
 
   h1 {
     font-size: 3rem;
@@ -14,15 +15,32 @@
     font-weight: 320;
     line-height: 200%;
 
-    code {
-      padding: 0.5rem;
-      margin-left: 0.5rem;
-      margin-right: 0.5rem;
-      background: #ececec;
-      border-radius: 0.3rem;
+    button#file-upload {
+      margin-bottom: 1.4rem;
+      font-size: 1rem;
+      font-family: inherit;
     }
-    button {
-      margin-left: 0.3rem;
+
+    .url-input {
+      width: 400px;
+      margin: auto;
+      text-align: left;
+      margin-top: 1rem;
+
+      label {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      input {
+        width: 100%;
+        font-size: 0.9rem;
+        font-family: DM Mono, monospace;
+
+        &::placeholder {
+          font-weight: 300;
+        }
+      }
     }
   }
 }

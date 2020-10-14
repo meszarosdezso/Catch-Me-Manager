@@ -1,14 +1,31 @@
-#LoadingPage {
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-flow: column wrap;
+.LoadingPage {
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
 
-  h1 {
-    font-weight: 500;
-    margin-bottom: 1rem;
-    font-size: 3rem;
+  img {
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
+    margin: auto;
+    pointer-events: none;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+  }
+
+  p {
+    position: absolute;
+    left: 50%;
+    top: 80vh;
+    transform: translateX(-50%);
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 1px;
+    opacity: 0.3;
   }
 }

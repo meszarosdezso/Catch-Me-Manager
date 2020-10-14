@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext, useCallback } from 'react'
 import { CatchMeData } from '../interfaces'
 import { createContext } from 'react'
 import { parseData } from '../utils/catchme'
@@ -6,49 +6,57 @@ import UploadData from '../pages/UploadData/UploadData'
 import LoadingPage from '../pages/Loading/Loading'
 
 interface Props extends CatchMeData {
-  uploadData(data: any): void
+  uploadData: (json: any) => void
 }
 
 const CatchMeContext = createContext<Props>({} as Props)
 
 const CatchMeProvider: React.FC = ({ children }) => {
-  const [{ data, loading, noData }, setState] = useState<{
-    noData: boolean
-    data: CatchMeData
+  const [{ data, loading }, setState] = useState<{
+    data: CatchMeData | null
     loading: boolean
-  }>({ data: {} as CatchMeData, loading: true, noData: false })
+  }>({ data: {} as CatchMeData, loading: true })
 
-  useEffect(() => {
-    fetchData().then(data => {
-      setState({
-        data: parseData(data),
-        loading: false,
-        noData: data === null,
-      })
-    })
-  }, [])
-
-  const fetchData = async () => {
+  const loadData = useCallback(async () => {
     try {
-      const file = await fetch('./export.json') //! Typo for testing
-      return await file.json()
+      const file = await fetch('./export.json')
+      const json = await file.json()
+
+      return json
     } catch {
       return null
     }
+  }, [])
+
+  const uploadData = (json: any) => {
+    setState({
+      data: !json ? null : parseData(json),
+      loading: false,
+    })
   }
 
-  const uploadData = (data: any) => {
-    setState({ data: parseData(data), loading: false, noData: false })
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      loadData().then(uploadData)
+    }, 1000)
+  }, [loadData])
 
   return (
     <CatchMeContext.Provider
       value={{
         uploadData,
-        ...data,
+        stops: data?.stops || {},
+        routes: data?.routes || {},
+        shapes: data?.shapes || {},
       }}
     >
-      {loading ? <LoadingPage /> : noData ? <UploadData /> : children}
+      {loading ? (
+        <LoadingPage text="Loading the app..." />
+      ) : data === null ? (
+        <UploadData />
+      ) : (
+        children
+      )}
     </CatchMeContext.Provider>
   )
 }

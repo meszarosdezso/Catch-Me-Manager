@@ -1,12 +1,14 @@
-import React from "react"
-import "./Loading.scss"
-import { PulseLoader } from "react-spinners"
+import React from 'react'
+import './Loading.scss'
+import busGIF from '../../assets/bus.gif'
 
-export default function LoadingPage() {
+const LoadingPage: React.FC<{ text: string }> = ({ text }) => {
   return (
-    <div id="LoadingPage">
-      <h1>Loading</h1>
-      <PulseLoader />
+    <div className="LoadingPage">
+      <img src={busGIF} alt="bus" /> <br />
+      <p>{text}</p>
     </div>
   )
 }
+
+export default LoadingPage
