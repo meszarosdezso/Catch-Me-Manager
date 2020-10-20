@@ -13,7 +13,9 @@ export enum RouteType {
 }
 
 export type Route = {
-  name: string
+  agency_id: string
+  short_name: string
+  long_name: string
   id: string
   color?: string
   text_color?: string
@@ -36,6 +38,7 @@ export type Stop = {
 }
 
 export type CatchMeData = {
+  agencies: string[]
   stops: { [stopId: string]: Stop }
   routes: { [routeId: string]: Route }
   shapes: { [shapeId: string]: Shape[] }

@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Jost:wght@320;500;800&family=DM+Mono:wght@400&display=swap');
 
-$accent: #202fd4;
-$secondary: #ed9e17;
+:root {
+  --accent: #202fd4;
+  --primary: #ff0051;
+  --secondary: #ed9e17;
+}
 
 * {
   margin: 0;
@@ -66,10 +69,14 @@ input {
   }
 }
 
-span.accent {
-  color: $accent;
+.primary {
+  color: var(--primary);
 }
 
-span.secondary {
-  color: $secondary;
+.accent {
+  color: var(--accent);
+}
+
+.secondary {
+  color: var(--secondary);
 }

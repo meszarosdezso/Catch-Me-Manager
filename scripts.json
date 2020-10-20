@@ -1,0 +1,13 @@
+{
+  "$schema": "https://deno.land/x/denon/schema.json",
+  "scripts": {
+    "start": {
+      "cmd": "deno run --allow-net --allow-write --allow-read server.ts",
+      "desc": "run server"
+    },
+    "restart": {
+      "cmd": "deno run --reload --allow-net --allow-write --allow-read index.ts",
+      "desc": "run server with reload"
+    }
+  }
+}

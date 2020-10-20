@@ -1,0 +1,51 @@
+.SelectPage {
+  padding: 2rem;
+  text-align: center;
+  height: 100%;
+
+  ul.catchme-data-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem auto;
+      width: max-content;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      background: #f3f3f3;
+      cursor: pointer;
+      transition: transform 100ms ease-out;
+
+      &:hover {
+        transform: scale(1.04);
+      }
+
+      h3 {
+        font-weight: 400;
+        margin-right: 2rem;
+      }
+
+      .details {
+        display: flex;
+        align-items: center;
+
+        span {
+          font-size: 0.8rem;
+          display: inline-flex;
+          align-items: center;
+
+          &:not(:last-child) {
+            margin-right: 1rem;
+          }
+
+          svg {
+            margin-right: 0.3rem;
+          }
+        }
+      }
+    }
+  }
+}

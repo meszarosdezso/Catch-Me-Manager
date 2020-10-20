@@ -5,8 +5,12 @@
   grid-template-rows: 2.5rem auto;
 
   #RouteTypeFilter {
-    margin-bottom: 1rem;
-    font-size: 1rem;
+    font-size: 0.8rem;
+    color: black;
+    border: none;
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+    position: relative;
   }
 
   #RouteList {

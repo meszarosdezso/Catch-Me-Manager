@@ -1,4 +1,3 @@
-use anyhow::Result;
 use gtfs_structures::{Gtfs, Route, RouteType, Shape, Stop, Trip};
 use rgb::RGB8;
 use serde::Serialize;
@@ -26,8 +25,10 @@ impl CatchMeShape {
 
 #[derive(Debug, PartialEq, Serialize)]
 pub struct CatchMeRoute {
-    name: String,
+    short_name: String,
+    long_name: String,
     id: String,
+    agency_id: Option<String>,
     color: Option<String>,
     text_color: Option<String>,
     vehicle: RouteType,
@@ -56,32 +57,41 @@ impl From<Arc<Stop>> for CatchMeStop {
 
 #[derive(Debug, Serialize)]
 pub struct CatchMeData {
+    pub agencies: Vec<String>,
     pub routes: HashMap<String, CatchMeRoute>,
     pub stops: HashMap<String, CatchMeStop>,
     pub shapes: HashMap<String, Vec<CatchMeShape>>,
 }
 
-pub type CatchMeTrip = HashMap<(Vec<String>, Option<String>), i32>;
+impl CatchMeData {
+    pub fn from_gtfs(gtfs: &Gtfs) -> CatchMeData {
+        let stops_for_routes = get_stops_for_routes(&gtfs.trips);
 
-pub fn gtfs_to_catchme_data(gtfs: &Gtfs) -> Result<CatchMeData> {
-    let stops_for_routes = get_stops_for_routes(&gtfs.trips);
+        let most_popular_trips = get_most_popular_trips(&stops_for_routes, &gtfs.routes);
 
-    let most_popular_trips = get_most_popular_trips(&stops_for_routes, &gtfs.routes);
+        let used_stops = get_used_stops(&most_popular_trips, &gtfs.stops);
 
-    let used_stops = get_used_stops(&most_popular_trips, &gtfs.stops);
+        let used_shapes = get_used_shapes(&most_popular_trips, &gtfs.shapes);
 
-    let used_shapes = get_used_shapes(&most_popular_trips, &gtfs.shapes);
+        let data = CatchMeData {
+            agencies: gtfs
+                .agencies
+                .iter()
+                .map(|a| a.id.clone().unwrap())
+                .collect::<Vec<String>>(),
+            routes: most_popular_trips,
+            stops: used_stops,
+            shapes: used_shapes,
+        };
 
-    let data = CatchMeData {
-        routes: most_popular_trips,
-        stops: used_stops,
-        shapes: used_shapes,
-    };
-
-    Ok(data)
+        data
+    }
 }
 
-pub fn get_stops_for_routes(trips: &HashMap<String, Trip>) -> HashMap<String, CatchMeTrip> {
+/// A trip of a single route with it's popularity score
+type CatchMeTrip = HashMap<(Vec<String>, Option<String>), i32>;
+
+fn get_stops_for_routes(trips: &HashMap<String, Trip>) -> HashMap<String, CatchMeTrip> {
     let mut stops_for_routes: HashMap<String, CatchMeTrip> = HashMap::new();
 
     for trip in trips.values() {
@@ -94,7 +104,7 @@ pub fn get_stops_for_routes(trips: &HashMap<String, Trip>) -> HashMap<String, Ca
     stops_for_routes
 }
 
-pub fn get_most_popular_trips(
+fn get_most_popular_trips(
     stops_for_routes: &HashMap<String, CatchMeTrip>,
     routes: &HashMap<String, Route>,
 ) -> HashMap<String, CatchMeRoute> {
@@ -106,7 +116,9 @@ pub fn get_most_popular_trips(
             let (stops, shape_id) = most_popular_trip(value);
 
             let catch_me_route = CatchMeRoute {
-                name: route.short_name.clone(),
+                agency_id: route.agency_id.clone(),
+                short_name: route.short_name.clone(),
+                long_name: route.long_name.clone(),
                 id: route.id.clone(),
                 color: route.route_color.map(rgb_to_hex),
                 text_color: route.route_text_color.map(rgb_to_hex),
@@ -138,7 +150,7 @@ fn get_trip_data(trip: &Trip) -> (Vec<String>, Option<String>) {
     (stops, trip.shape_id.clone())
 }
 
-pub fn get_used_stops(
+fn get_used_stops(
     trips: &HashMap<String, CatchMeRoute>,
     stops: &HashMap<String, Arc<Stop>>,
 ) -> HashMap<String, CatchMeStop> {
@@ -148,7 +160,7 @@ pub fn get_used_stops(
         .collect()
 }
 
-pub fn get_used_shapes(
+fn get_used_shapes(
     trips: &HashMap<String, CatchMeRoute>,
     shapes: &HashMap<String, Vec<Shape>>,
 ) -> HashMap<String, Vec<CatchMeShape>> {

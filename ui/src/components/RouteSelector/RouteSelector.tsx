@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react'
-import './RouteSelector.scss'
 import { Route, RoutesByColors, RouteType } from '../../interfaces'
 import { useCatchMe } from '../../providers/catchme.provider'
 import { VisibleRoutesConsumer } from '../../providers/visibleRoutes.provider'
+import './RouteSelector.scss'
 
 const RouteSelector: React.FC = () => {
   const { routes } = useCatchMe()
@@ -44,12 +44,15 @@ const RouteSelector: React.FC = () => {
                 </option>
               ))}
             </select>
+
+            <br />
             <div id="RouteList">
               {Object.values(routes)
                 .filter(r => r.type === routeTypeFilter)
                 .sort(
                   (r1, r2) =>
-                    +r1.name.replace(/\D/g, ' ') - +r2.name.replace(/\D/g, ' ')
+                    +r1.short_name.replace(/\D/g, ' ') -
+                    +r2.short_name.replace(/\D/g, ' ')
                 )
                 .map(route => (
                   <div
@@ -73,10 +76,20 @@ const RouteSelector: React.FC = () => {
                         : 0.5,
                     }}
                   >
-                    <p>{route.name}</p>
+                    <p>{route.short_name}</p>
                   </div>
                 ))}
             </div>
+            <br />
+            <button
+              className="full"
+              onClick={_ => {
+                setVisibleRoutes({})
+                setSelectedRoute({} as Route)
+              }}
+            >
+              Deselect all
+            </button>
           </div>
         )
       }}

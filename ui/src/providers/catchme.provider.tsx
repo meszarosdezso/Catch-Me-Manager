@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext, useCallback } from 'react'
 import { CatchMeData } from '../interfaces'
 import { createContext } from 'react'
 import { parseData } from '../utils/catchme'
-import UploadData from '../pages/UploadData/UploadData'
 import LoadingPage from '../pages/Loading/Loading'
 
 interface Props extends CatchMeData {
@@ -19,7 +18,7 @@ const CatchMeProvider: React.FC = ({ children }) => {
 
   const loadData = useCallback(async () => {
     try {
-      const file = await fetch('./export.json')
+      const file = await fetch('./data.json')
       const json = await file.json()
 
       return json
@@ -38,25 +37,20 @@ const CatchMeProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setTimeout(() => {
       loadData().then(uploadData)
-    }, 1000)
+    }, 200)
   }, [loadData])
 
   return (
     <CatchMeContext.Provider
       value={{
         uploadData,
+        agencies: data?.agencies || [],
         stops: data?.stops || {},
         routes: data?.routes || {},
         shapes: data?.shapes || {},
       }}
     >
-      {loading ? (
-        <LoadingPage text="Loading the app..." />
-      ) : data === null ? (
-        <UploadData />
-      ) : (
-        children
-      )}
+      {loading ? <LoadingPage text="Loading the app..." /> : children}
     </CatchMeContext.Provider>
   )
 }

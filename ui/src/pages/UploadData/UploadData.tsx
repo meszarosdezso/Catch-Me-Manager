@@ -2,40 +2,36 @@ import React, { useRef, useState } from 'react'
 import './UploadData.scss'
 import { useCatchMe } from '../../providers/catchme.provider'
 import Layout from '../../components/Layout/Layout'
-import { fileToArrayBuffer } from '../../utils/read'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import LoadingPage from '../Loading/Loading'
+import { Link } from 'react-router-dom'
+import { Send } from 'react-feather'
+import { sendFileOrUrl } from '../../utils/api'
 
 const UploadPage: React.FC = () => {
   const fileRef = useRef() as React.MutableRefObject<HTMLInputElement>
+  const urlRef = useRef() as React.MutableRefObject<HTMLInputElement>
   const [state, setState] = useState<'LOADING' | 'READY'>('READY')
 
   const history = useHistory()
   const { uploadData } = useCatchMe()
 
-  const uploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState('LOADING')
+  const handleSubmit = async (data: File | string) => {
     try {
-      const file = e.target.files![0]
-
-      const arrayBuffer = await fileToArrayBuffer(file)
-
-      if (arrayBuffer) {
-        await axios.post('http://127.0.0.1:1873/gtfs', {
-          gtfs: Buffer.from(arrayBuffer),
-        })
-
-        const { data } = await axios.get('/export.json')
-
-        uploadData(data)
-      }
-
-      history.push('/')
+      setState('LOADING')
+      await sendFileOrUrl(data)
+      handleDone()
     } catch (e) {
-      console.log(e.response)
+      console.log(e)
       setState('READY')
     }
+  }
+
+  const handleDone = async () => {
+    const { data } = await axios.get(`/data.json`)
+    uploadData(data)
+    history.push('/')
   }
 
   if (state === 'LOADING')
@@ -46,8 +42,9 @@ const UploadPage: React.FC = () => {
       <div className="UploadPage">
         <div>
           <h1>
-            Let's start with some data{' '}
-            <span aria-label="Down finger" role="img">
+            Let's start with some data
+            <span aria-label="Box" role="img">
+              {' '}
               🗂
             </span>
           </h1>
@@ -59,19 +56,37 @@ const UploadPage: React.FC = () => {
             >
               Upload GTFS zip
             </button>
-            <input type="file" hidden ref={fileRef} onChange={uploadFile} />
+            <input
+              type="file"
+              hidden
+              ref={fileRef}
+              onChange={e => handleSubmit(e.target.files![0])}
+            />
             <h3 style={{ fontFamily: 'DM Mono, monospace' }}>/</h3>
             <div className="url-input">
               <label htmlFor="url">Insert URL</label>
-              <br />
-              <input
-                type="text"
-                name="url"
-                id="url"
-                placeholder="eg.: https://bkk.hu/gtfs/budapest_gtfs.zip"
-              />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <input
+                  type="text"
+                  name="url"
+                  ref={urlRef}
+                  id="url"
+                  placeholder="eg.: https://bkk.hu/gtfs/budapest_gtfs.zip"
+                />
+                <Send
+                  id="sendUrlIcon"
+                  style={{ marginLeft: '1rem' }}
+                  onClick={_ => handleSubmit(urlRef.current.value)}
+                />
+              </div>
             </div>
           </div>
+          <Link to="/select" id="already-have">
+            I already have some data{' '}
+            <span aria-label="Metal" role="img">
+              🤘
+            </span>
+          </Link>
         </div>
       </div>
     </Layout>

@@ -7,6 +7,7 @@ import {
 } from '../interfaces'
 
 export function parseData(data: {
+  agencies: string[]
   routes: { [key: string]: any }
   stops: { [key: string]: Stop }
   shapes: { [key: string]: any[] }
@@ -17,12 +18,15 @@ export function parseData(data: {
     routes: {},
     stops: data.stops,
     shapes: {},
+    agencies: data['agencies'],
   } as CatchMeData
 
   Object.keys(data.routes).forEach(key => {
     const rawRoute = data.routes[key]
     ret.routes[key] = {
       ...rawRoute,
+      color: rawRoute.color || '#202fd4',
+      text_color: rawRoute.text_color || '#ffffff',
       type: parseRouteType(rawRoute.vehicle),
       stops: rawRoute.stops.map((s: string) => data.stops[s]),
     }
@@ -47,10 +51,14 @@ const parseRouteType = (typeNum: number): RouteType => {
       return RouteType.Tramway
     case 1:
       return RouteType.Subway
+    case 2:
+      return RouteType.Rail
     case 3:
       return RouteType.Bus
     case 4:
       return RouteType.Ferry
+    case 7:
+      return RouteType.Funicular
     case 11:
       return RouteType.Trolleybus
     case 800:

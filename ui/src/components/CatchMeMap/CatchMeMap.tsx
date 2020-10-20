@@ -38,7 +38,7 @@ const CatchMeMap: React.FC<Props> = ({ style, id }) => {
           borderRadius: '.3rem',
           overflow: 'hidden',
         }}
-        style={'mapbox://styles/mapbox/light-v9' as string}
+        style={'mapbox://styles/mapbox/dark-v9' as string}
       >
         <VisibleRoutesConsumer>
           {({ visibleRoutes, selectedRoute, selectedStop }) => {
@@ -59,6 +59,10 @@ const CatchMeMap: React.FC<Props> = ({ style, id }) => {
                   >
                     {visibleRoutes[color].map(routeId => {
                       const shape = shapes[routes[routeId].shape_id]
+
+                      if (!shape) {
+                        return <Feature key={routeId} coordinates={[0, 0]} />
+                      }
 
                       return (
                         <Feature

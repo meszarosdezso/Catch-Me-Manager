@@ -19,12 +19,12 @@ const CreatePage: React.FC = () => {
 
           <VisibleRoutesConsumer>
             {({ selectedRoute: route, setSelectedStop: setStop }) => {
-              if (!route.name) return <h4>Select a route to start!</h4>
-              if (route.name)
+              if (!route.short_name) return <h4>Select a route to start!</h4>
+              if (route.short_name)
                 return (
                   <div id="SelectedRoute">
                     <h2 className="title">
-                      {route.name} (
+                      {route.short_name} (
                       {route.stops && Object.values(route.stops)[0].name} -{' '}
                       {route.stops &&
                         Object.values(route.stops).reverse()[0].name}
@@ -53,7 +53,7 @@ const CreatePage: React.FC = () => {
                         }}
                         className="full"
                       >
-                        Save {route.name}
+                        Save {route.short_name}
                       </button>
                       <button
                         style={{
